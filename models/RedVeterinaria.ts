@@ -2,6 +2,7 @@ import { CrudOperations } from "../interface/CrudOperations";
 import { Provider } from "./Provider";
 import { Veterinary } from "./Veterinary ";
 import { question, questionInt } from "readline-sync";
+import * as fs from 'fs';
 
 export class RedVeterinaria implements CrudOperations<Object> {
     private veterinarias:Veterinary [] = [];
@@ -29,8 +30,10 @@ export class RedVeterinaria implements CrudOperations<Object> {
         console.log(`La veterinaria ${newVeterinary.getName()} fue creada con exito!`);
         console.log(newVeterinary);
         
+        fs.appendFileSync('veterinarias.txt', `Veterinaria: ${name}, Direccion: ${adress}, Clientes: ${newVeterinary.getClients()}, Proveedores: ${newVeterinary.getPatients()} \n`);
+
         this.veterinarias.push(newVeterinary);
-       }
+      }
 
        public read(object: Object):void {}
     
@@ -42,7 +45,8 @@ export class RedVeterinaria implements CrudOperations<Object> {
         console.log("Gestionar veterinarias");
         console.log("");
 
-        console.log("1. Crear Veterinaria");
+        console.log("1. Ver lista");
+        console.log("2. Crear Veterinaria");
         
 
         let option:number = questionInt("Selecione opcion: ");
@@ -50,6 +54,9 @@ export class RedVeterinaria implements CrudOperations<Object> {
             case 1:
                 this.create();
             break;
+            case 2:
+              this.create();
+          break;
         }
         
        }
