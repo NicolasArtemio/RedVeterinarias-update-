@@ -1,6 +1,8 @@
 import { CrudOperations } from "../interface/CrudOperations";
 import { Client } from "./Client";
 import { Patient } from "./Patient ";
+import { question, questionInt } from "readline-sync";
+
 
 
 export class Veterinary implements CrudOperations<Object> {
@@ -44,11 +46,18 @@ export class Veterinary implements CrudOperations<Object> {
     return this.patients;
    }
 
-   public create(object: Object):void {}
+   public create():void {
+    let name = question("Ingrese nombre: ");
+    while (!name || !/^[a-zA-Z]+$/.test(name)) {
+      name = question("Ingrese un nombre válido (solo letras a-z o A-Z): ");
+    }
+   }
 
    public read(object: Object):void {}
 
    public update(object: Object):void {}
     
    public delete(object: Object):void {}
+
+
 }
