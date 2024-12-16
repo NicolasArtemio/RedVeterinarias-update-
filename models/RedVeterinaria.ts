@@ -1,20 +1,19 @@
-import { CrudOperations } from "../interface/CrudOperations";
 import { Provider } from "./Provider";
 import { Veterinary } from "./Veterinary ";
 import { question, questionInt } from "readline-sync";
 import * as fs from 'fs';
 
-export class RedVeterinaria implements CrudOperations<Object> {
-    private veterinarias:Veterinary [] = [];
-    private proveedores:Provider [] = [];
+export class RedVeterinaria {
+    private veterinaries:Veterinary [] = [];
+    private providers:Provider [] = [];
 
     constructor() {
-        this.veterinarias = [];
-        this.proveedores = []
+        this.veterinaries = [];
+        this.providers = []
     }
 
 
-      public create():void {
+      public createVeterinay():void {
         let name = question("Ingrese nombre: ");
         while (!name || !/^[a-zA-Z]+$/.test(name)) {
           name = question("Ingrese un nombre valido (solo letras a-z o A-Z): ");
@@ -30,16 +29,52 @@ export class RedVeterinaria implements CrudOperations<Object> {
         console.log(`La veterinaria ${newVeterinary.getName()} fue creada con exito!`);
         console.log(newVeterinary);
         
-        fs.appendFileSync('veterinarias.txt', `Veterinaria: ${name}, Direccion: ${adress}, Clientes: ${newVeterinary.getClients()}, Proveedores: ${newVeterinary.getPatients()} \n`);
+        fs.appendFileSync('veterinarias.txt', `Veterinaria: ${newVeterinary.getName()}, Direccion: ${newVeterinary.getAdress()}, Clientes: ${newVeterinary.getClients()}, Proveedores: ${newVeterinary.getPatients()} \n`);
 
-        this.veterinarias.push(newVeterinary);
+        this.veterinaries.push(newVeterinary);
       }
 
-       public read(object: Object):void {}
-    
-       public update(object: Object):void {}
-        
-       public delete(object: Object):void {}
+      public readListVeterinary():void {
+        let data:string;
+       
+        try{
+          data =  fs.readFileSync("veterinarias.txt", "utf-8");
+          console.log(data);
+
+        }catch (err){
+            console.error("Error en lectura del archivo",err);
+        }
+      }
+
+      public updateVeterinary():void {
+        let data: string;
+
+        try {
+            data = fs.readFileSync("veterinarias.txt", "utf-8");
+            console.log("Lista de veterinarias:\n", data);
+
+            let nameToUpdate = question("Ingrese el nombre de la veterinaria que desea modificar: ");
+            
+            let veterinaryToUpdate = this.veterinaries.find(v => v.getName() === nameToUpdate);
+
+            if (veterinaryToUpdate) {
+                let newName = question(`Nuevo nombre para la veterinaria (deje vacío para mantener el actual "${veterinaryToUpdate.getName()}"): `);
+                let newAddress = question(`Nueva direccion para la veterinaria (deje vacío para mantener la actual "${veterinaryToUpdate.getAdress()}"): `);
+
+                if (newName) veterinaryToUpdate.setName(newName)
+                if (newAddress) veterinaryToUpdate.setAdress(newAddress)
+
+                let updatedData = this.veterinaries.map(v => 
+                    `Veterinaria: ${v.getName()}, Direccion: ${v.getAdress()}, Clientes: ${v.getClients()}, Proveedores: ${v.getPatients()}`).join("\n");
+                fs.writeFileSync('veterinarias.txt', updatedData, 'utf-8');
+                console.log("La veterinaria ha sido actualizada.");
+            } else {
+                console.log("Veterinaria no encontrada.");
+            }
+        } catch (err) {
+            console.error("Error en lectura o escritura del archivo", err);
+        }
+      }
 
        public menu() {
         console.log("Gestionar veterinarias");
@@ -47,16 +82,24 @@ export class RedVeterinaria implements CrudOperations<Object> {
 
         console.log("1. Ver lista");
         console.log("2. Crear Veterinaria");
+        console.log("3. Actualizar Veterinaria");
         
 
         let option:number = questionInt("Selecione opcion: ");
         switch(option) {
             case 1:
-                this.create();
+                this.readListVeterinary();
             break;
             case 2:
-              this.create();
-          break;
+              this.createVeterinay();
+            break;
+            case 3:
+              this.updateVeterinary();
+            break;
+            default:
+              console.log("Opcion no valida")
+              this.menu();
+            break;
         }
         
        }

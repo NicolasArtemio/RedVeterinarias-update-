@@ -1,11 +1,10 @@
-import { CrudOperations } from "../interface/CrudOperations";
 import { Client } from "./Client";
 import { Patient } from "./Patient ";
 import { question, questionInt } from "readline-sync";
 
 
 
-export class Veterinary implements CrudOperations<Object> {
+export class Veterinary {
     private idVeterinary: number;
     private name: string;
     private adress: string;
