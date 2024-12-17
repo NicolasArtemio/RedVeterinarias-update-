@@ -1,3 +1,0 @@
-Veterinaria: ombu, Direccion: colon3232, Clientes: , Proveedores:  
-Veterinaria: queretaro, Direccion: bolivar 3222, Clientes: , Proveedores:  
-Veterinaria: torpedo, Direccion: urquiza 2323, Clientes: , Proveedores:  
