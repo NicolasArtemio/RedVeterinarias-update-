@@ -3,8 +3,8 @@ export class Provider {
   private name: string;
   private phone: string;
 
-  constructor(id: number , name: string, phone: string) {
-    this.id = id;
+  constructor(name: string, phone: string) {
+    this.id = Math.floor(Math.random() * 10000);
     this.name = name;
     this.phone = phone;
   }
